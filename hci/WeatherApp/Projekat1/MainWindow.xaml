@@ -1,0 +1,152 @@
+﻿<Window x:Class="Projekat1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:local="clr-namespace:Projekat1"
+        mc:Ignorable="d"
+        Title="Weather Application" 
+        
+ 
+      
+    WindowStartupLocation="CenterScreen" WindowState="Maximized" Height="1080" Width="2000">
+
+    <Grid>
+
+
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition  />
+            <RowDefinition  />
+        </Grid.RowDefinitions>
+
+
+        <Grid.Background>
+            <ImageBrush ImageSource="Slike/grom2.jpg"/>
+        </Grid.Background>
+
+
+
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="461*"/>
+                <ColumnDefinition Width="535*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="1" Foreground="WhiteSmoke" FontSize="30">Trenutna temperatura za izabrane gradove</Label>
+            <DataGrid Name="tabelaGlavna" Grid.Column="1"  SelectedItem="{Binding Path=SelektovaniGrad, Mode=TwoWay}" ItemsSource="{Binding TabelaVremeCurrent}" FontSize="25" Opacity="0.7" IsReadOnly="True" HorizontalAlignment="Left" Height="289" Width="988" VerticalAlignment="Top" AutoGenerateColumns="False" MouseDoubleClick="TabelaGlavna_SelectionChanged" Margin="10,51,0,0">
+
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn x:Name="nazivGrada" Header="Naziv Grada">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Name="slicica" Width="16" Height="16"/>
+                                    <TextBlock Text="{Binding naziv}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Datum" Binding="{Binding dt}"/>
+                    <DataGridTextColumn Header="Trenutna temperatura" Binding="{Binding temp}"/>
+
+                    <DataGridTextColumn Header="Vazdusni pritisak" Binding="{Binding pressure}"/>
+                    <DataGridTextColumn Header="Vlaznost vazduha" Binding="{Binding humidity}"/>
+                    <DataGridTextColumn Header="Vidljivost" Binding="{Binding visibility}"/>
+                </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+
+                    <ContextMenu>
+                        <MenuItem Header="Obrisi" Click="obrisiGrad"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="BorderThickness" Value="0" />
+                    </Style>
+                </DataGrid.RowStyle>
+
+
+            </DataGrid >
+            <ComboBox FontSize="30" Opacity="0.7" Grid.Column="0" x:Name="listBox" ItemsSource="{Binding imenaGradova, UpdateSourceTrigger=Explicit}" SelectedItem="{Binding selectedName, Mode=TwoWay}" Text ="Izaberite grad" Margin="25,69,571,216"  />
+            <Label Foreground="WhiteSmoke" FontSize="20" Margin="25,0,543,157" Height="46" VerticalAlignment="Bottom">Unesite broj dana za prikaz(1-8)</Label>
+            <Label Foreground="WhiteSmoke" FontSize="30" Margin="50,0,571,281" Height="59" VerticalAlignment="Bottom">IZABERITE GRAD</Label>
+
+            <TextBox Opacity="0.7" x:Name="itemNameTextBox" PreviewTextInput="NumberValidationTextBox" FontSize="20"  Margin="360,139,490,165"  Text="{Binding Path=brojDana, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <Button x:Name ="Dugme"  Opacity="0.7" Content="Prikazi"  FontSize="20"  Click="Dugme_Click" HorizontalAlignment="Left"   Margin="422,69,0,216" RenderTransformOrigin="0.615,1.45" Width="116" />
+
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="919*" />
+                <ColumnDefinition Width="1073*"  />
+
+            </Grid.ColumnDefinitions>
+            <Label Name="labelaDetaljna" Content="Detaljna prognoza po satima za izabrani grad" Foreground="WhiteSmoke" FontSize="30" Grid.Column="1" Visibility="Visible" VerticalAlignment="Bottom" HorizontalAlignment="Left"  Margin="10,0,0,271" Height="52" Width="666"></Label>
+            <Label Grid.Column="0"  Foreground="WhiteSmoke" x:Name="LabelaTemperatura"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="370,0,0,0" FontSize="55" Height="107" Width="241"/>
+
+            <Label Grid.Column="0" Content=""  Foreground="WhiteSmoke" x:Name ="LabelaGrad"  FontWeight="DemiBold" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,-5,0,283"  FontSize="40" Width="278" Height="72"/>
+            <Label Grid.Column="0"   Foreground="WhiteSmoke" x:Name ="LabelaDrzava"  FontWeight="DemiBold" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,24,0,0"  FontSize="40" FontStyle="Italic" Width="271" Height="62"/>
+            <Label Grid.Column="0"     Foreground="WhiteSmoke" x:Name="LabelaVlaznost"  FontWeight="DemiBold" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="370,0,0,150"  FontSize="20" RenderTransformOrigin="0.409,0.217" Width="342" Height="43"/>
+            <Label Grid.Column="0"   Foreground="WhiteSmoke"  x:Name="LabelaOsecaj"  FontWeight="DemiBold" VerticalAlignment="Top" Margin="370,184,187,0"  FontSize="20" RenderTransformOrigin="2.173,-1.283" Height="47"/>
+            <Label Grid.Column="0"    Foreground="WhiteSmoke"  x:Name="LabelaPritisak"  FontWeight="DemiBold" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="370,0,0,72"  FontSize="20" Width="405" Height="47"/>
+            <Label Foreground="WhiteSmoke" Grid.Column="0" Name="LabelaOpis" FontSize="25" Margin="194,251,494,40"></Label>
+            <Image x:Name="ImageViewer1" Width="184" HorizontalAlignment="Left" Margin="163,116,0,67" RenderTransformOrigin="0.374,0.553"/>
+
+            <DataGrid Name="TabelaSati" Grid.Column="1" Visibility="Visible" ItemsSource="{Binding TabelaVremeHourly}"  FontSize="25" Opacity="0.7" IsReadOnly="True" HorizontalAlignment="Left" Height="268" Width="991" VerticalAlignment="Top" AutoGenerateColumns="False" Margin="10,72,0,0">
+                <DataGrid.Columns>
+
+                    <DataGridTextColumn Header="Vreme" Binding="{Binding dt}"/>
+                    <DataGridTextColumn Header="Trenutna temperatura" Binding="{Binding temp}"/>
+
+                    <DataGridTextColumn Header="Vazdusni pritisak" Binding="{Binding pressure}"/>
+                    <DataGridTextColumn Header="Vlaznost vazduha" Binding="{Binding humidity}"/>
+
+                </DataGrid.Columns>
+            </DataGrid>
+
+
+
+        </Grid>
+
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1607*" />
+                <ColumnDefinition Width="385*"  />
+
+            </Grid.ColumnDefinitions>
+            <lvc:CartesianChart  Grid.Column="0" Series="{Binding SeriesCollection}" Name="chart_day" Visibility="Visible" Margin="10,5,7,9">
+                <lvc:CartesianChart.AxisY>
+                    <lvc:Axis Title="Temp" LabelFormatter="{Binding YFormatter}"></lvc:Axis>
+                </lvc:CartesianChart.AxisY>
+                <lvc:CartesianChart.AxisX>
+                    <lvc:Axis Title="Time" Labels="{Binding Labels}"></lvc:Axis>
+                </lvc:CartesianChart.AxisX>
+            </lvc:CartesianChart>
+
+            <Button Opacity="0.7" FontSize="18" x:Name ="dugmePres"  Grid.Column="1" Content="Vazdusni pritisak" Click="DugmePres_Click" Margin="0,220,228,53"   />
+            <Button Opacity="0.7"  FontSize="18" x:Name ="dugneHum"  Grid.Column="1" Content="Vlaznost vazduha" Click="DugneHum_Click" Margin="0,108,228,161" />
+            <Button Opacity="0.7"  FontSize="18" x:Name ="dugmeTemp"  Grid.Column="1" Content="Temperatura" Click="DugmeTemp_Click" Margin="0,5,228,273"    />
+
+        </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </Grid>
+
+</Window>
